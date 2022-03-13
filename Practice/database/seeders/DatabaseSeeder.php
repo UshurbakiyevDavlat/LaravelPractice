@@ -13,6 +13,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        //php artisan db:seed - запуск всех наполнителей
+        //php artisan db:seed --class=UserSeeder запуск определенного наполнителя
+
+        $this->call([
+            UsersSeeder::class
+        ]);
     }
 }

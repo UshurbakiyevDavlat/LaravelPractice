@@ -1,30 +1,39 @@
-    <?php
+<?php
 
-    use App\Http\Controllers\FormsOneController;
-    use App\Http\Controllers\FormsPostController;
-    use App\Http\Controllers\PostController;
-    use App\Http\Controllers\Product;
-    use App\Http\Controllers\SessionController;
-    use App\Http\Controllers\RedirectController;
-    use Illuminate\Support\Facades\Route;
-    use App\Http\Controllers\TestController;
-    use App\Http\Controllers\PageController as PagesController;
-    use App\Http\Controllers\EmployeeController as EmployeeController;
-    /*
-    |--------------------------------------------------------------------------
-    | Web Routes
-    |--------------------------------------------------------------------------
-    |
-    | Here is where you can register web routes for your application. These
-    | routes are loaded by the RouteServiceProvider within a group which
-    | contains the "web" middleware group. Now create something great!
-    |
-    */
+use App\Http\Controllers\DBcontroller;
+use App\Http\Controllers\FormsOneController;
+use App\Http\Controllers\FormsPostController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\Product;
+use App\Http\Controllers\SessionController;
+use App\Http\Controllers\RedirectController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TestController;
+use App\Http\Controllers\PageController as PagesController;
+use App\Http\Controllers\EmployeeController as EmployeeController;
 
-    Route::get('/',function () {
-        return "Hello this is starting page, please use urls to get some response";
-    });
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
 
+Route::get('/', function () {
+    return "Hello this is starting page, please use urls to get some response";
+});
+
+
+Route::group([
+    'prefix'=> 'DB',
+    'namespace'=>'DB'
+], function () {
+       Route::get('raw',[DBcontroller::class,'raw']);
+});
 
 //    Route::get('redirects/form',[RedirectController::class,'form']);
 //    Route::get('redirects/one',[RedirectController::class,'show1']);
@@ -40,7 +49,7 @@
 //    Route::get('sessions/deleteAll',[SessionController::class,'deleteAllData']);
 //    Route::get('sessions/getAll',[SessionController::class,'getAllData']);
 
-    //Route::get('test/show',[TestController::class,'show']);
+//Route::get('test/show',[TestController::class,'show']);
 
 //    Route::group(['prefix'=>'forms'],function(){
 //        Route::get('/form',[FormsPostController::class,'forms']);
@@ -107,50 +116,49 @@
 //
 
 
+//Route::get('/test',function (){
+//   return "!";
+//});
 
-    //Route::get('/test',function (){
-    //   return "!";
-    //});
+//Route::get('dir/test/',function (){
+//   return "!!";
+//});
 
-    //Route::get('dir/test/',function (){
-    //   return "!!";
-    //});
+//Route::get('/user/{id}/',function ($id) {
+//   return  $id;
+//});
 
-    //Route::get('/user/{id}/',function ($id) {
-    //   return  $id;
-    //});
+//Route::get('/user/{id}/{name}/',function ($id,$name){
+//    return "Name of user : $name";
+//});
 
-    //Route::get('/user/{id}/{name}/',function ($id,$name){
-    //    return "Name of user : $name";
-    //});
+//Route::get('/sum/{num1}/{num2}/',function ($num1,$num2){
+//    return $num1 + $num2;
+//});
 
-    //Route::get('/sum/{num1}/{num2}/',function ($num1,$num2){
-    //    return $num1 + $num2;
-    //});
+//Route::get('/client/{id?}',function ($id = 0){
+//    return $id;
+//});
 
-    //Route::get('/client/{id?}',function ($id = 0){
-    //    return $id;
-    //});
+//Route::get("/user/{id}",function ($id){
+//  return $id;
+//})->where('id','[0-9]+');
 
-    //Route::get("/user/{id}",function ($id){
-    //  return $id;
-    //})->where('id','[0-9]+');
+//Route::get("user/{id}/{name}",function ($id,$name){
+//  return "id - $id". " Name - $name";
+//})->where(['id'=>'[0-9]+','name'=>'[a-z]{3,}']);
 
-    //Route::get("user/{id}/{name}",function ($id,$name){
-    //  return "id - $id". " Name - $name";
-    //})->where(['id'=>'[0-9]+','name'=>'[a-z]{3,}']);
+//Route::get("/articles/{date}/",function ($date){
+//    return "Date of creating: $date";
+//})->where('date','^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$');
 
-    //Route::get("/articles/{date}/",function ($date){
-    //    return "Date of creating: $date";
-    //})->where('date','^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$');
+//Route::get('/users/{order}/',function ($order){
+//     return $order;
+//})->where('order','^name|surname|age$');
 
-    //Route::get('/users/{order}/',function ($order){
-    //     return $order;
-    //})->where('order','^name|surname|age$');
-
-    //Route::get('data/{year}/{month}/{day}/',function($year,$month,$day){
-    //    $dayOfWeek = new DateTime("$year-$month-$day");
-    //    return $dayOfWeek->format('l');
-    //})->where(['year'=>'([0-9]{4})','month'=>'(0[1-9]|1[0-2])','day'=>'(0[1-9]|[12][0-9]|3[01])']);
+//Route::get('data/{year}/{month}/{day}/',function($year,$month,$day){
+//    $dayOfWeek = new DateTime("$year-$month-$day");
+//    return $dayOfWeek->format('l');
+//})->where(['year'=>'([0-9]{4})','month'=>'(0[1-9]|1[0-2])','day'=>'(0[1-9]|[12][0-9]|3[01])']);
 
 
