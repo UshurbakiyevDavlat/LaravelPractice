@@ -33,6 +33,7 @@ Route::group([
     'namespace'=>'DB'
 ], function () {
        Route::get('raw',[DBcontroller::class,'raw']);
+       Route::get('all/Employees',[DBcontroller::class,'getAllEmployees']);
 });
 
 //    Route::get('redirects/form',[RedirectController::class,'form']);
