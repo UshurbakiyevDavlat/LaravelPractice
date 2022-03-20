@@ -38,7 +38,7 @@ RUN groupadd -g 1000 www
 RUN useradd -u 1000 -ms /bin/bash -g www www
 
 # Copy existing application directory contents
-COPY php /var/www
+#COPY php /var/www
 
 # Copy existing application directory permissions
 COPY --chown=www:www php /var/www
