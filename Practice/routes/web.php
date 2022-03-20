@@ -119,9 +119,9 @@ Route::get('employee/showOne/{id}', [EmployeeController::class, 'showOne'])
 Route::get('employee/showField/{id}/{attr}', [EmployeeController::class, 'showField'])
     ->where(['id' => '[0-9]+', 'attr' => '^name|surname|salary$']);
 
-Route::get('/', function () {
-    return "main page";
-});
+//Route::get('/', function () {
+//    return "main page";
+//});
 
 
 Route::get('/test', function () {
