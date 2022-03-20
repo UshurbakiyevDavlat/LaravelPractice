@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Post;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
@@ -131,29 +133,29 @@ class DBcontroller extends Controller
             $totalSum += $sum->total;
         }
 
-        $maxAndMinSalaryGroup =  DB::table('employees')
-            ->select(DB::raw('MAX(salary) as MAX'),DB::raw('MIN(salary) as MIN'),DB::raw('SUM(salary) as total'))
+        $maxAndMinSalaryGroup = DB::table('employees')
+            ->select(DB::raw('MAX(salary) as MAX'), DB::raw('MIN(salary) as MIN'), DB::raw('SUM(salary) as total'))
             ->groupBy('position')
             ->get();
 
-        $whereBirth1  = DB::table('employees')
-            ->select('name','birthday')
-            ->wheredate('birthday','=','1988-03-25')
+        $whereBirth1 = DB::table('employees')
+            ->select('name', 'birthday')
+            ->wheredate('birthday', '=', '1988-03-25')
             ->get();
 
-        $whereBirth2  = DB::table('employees')
-            ->select('name','birthday')
-            ->whereDay('birthday','=',25)
+        $whereBirth2 = DB::table('employees')
+            ->select('name', 'birthday')
+            ->whereDay('birthday', '=', 25)
             ->get();
 
-        $whereBirth3  = DB::table('employees')
-            ->select('name','birthday')
-            ->whereMonth('birthday','=',3)
+        $whereBirth3 = DB::table('employees')
+            ->select('name', 'birthday')
+            ->whereMonth('birthday', '=', 3)
             ->get();
 
-        $whereBirth4  = DB::table('employees')
-            ->select('name','birthday')
-            ->whereYear('birthday','=',1990)
+        $whereBirth4 = DB::table('employees')
+            ->select('name', 'birthday')
+            ->whereYear('birthday', '=', 1990)
             ->get();
 
         print_r($whereBirth1);
@@ -167,4 +169,102 @@ class DBcontroller extends Controller
 
         return view('components.employees.all', ['employees' => $employees]);
     }
+
+    public function buildInsertUsers()
+    {
+        $counter = Cache::get('ctr');
+        if (!$counter) Cache::remember('ctr', 360, function () {
+            return random_int(150, 3500);
+        });
+        $cacheId = Cache::get('id');
+        if (!$cacheId) {
+            $cacheId = Cache::remember('id', '360', function () use ($counter) {
+                return $counter + random_int(100, 300);
+            });
+        }
+        echo $cacheId;
+        $ins = DB::table('users')->insert([
+                [
+                    'name' => 'test1',
+                    'email' => 'dushur1' . $cacheId . '@gmail.com',
+                    'age' => 22,
+                    'password' => 'pass',
+                    'remember_token' => 'token'
+                ],
+                [
+                    'name' => 'test2',
+                    'email' => 'dushur2' . $cacheId . '@gmail.com',
+                    'age' => 22,
+                    'password' => 'pass',
+                    'remember_token' => 'token'
+                ],
+                [
+                    'name' => 'test3',
+                    'email' => 'dushur3' . $cacheId . '@gmail.com',
+                    'age' => 22,
+                    'password' => 'pass',
+                    'remember_token' => 'token'
+                ]
+            ]
+        );
+        return $ins;
+    }
+
+    public function buildOperationsUsers()
+    {
+        if (!self::buildInsertUsers()) return response(['error' => 'insertion failed']);
+        try {
+            $update = DB::table('users')
+                ->updateOrInsert(
+                    [
+                        'id' => 52,
+                    ],
+                    [
+                        'name' => 'updatedHyatt',
+                        'email' => 'updated@gmail.com',
+                        'age' => 21,
+                        'password' => 'pass'
+                    ]);
+        } catch (\Exception $exception) {
+            return $exception->getMessage();
+        }
+        try {
+            $delete = DB::table('users')->delete('131');
+        } catch (\Exception $exception) {
+            return $exception->getMessage();
+        }
+        return print_r($delete);
+    }
+
+    public function crossingRelate()
+    {
+        return dd(Db::table('products')
+            ->select('products.name', 'categories.name', 'categories.rarity')
+            ->join('categories', 'categories.id', '=', 'products.category_id')
+            ->get());
+    }
+
+    public function eloqStart($order = "date", $dir = 1)
+    {
+        $all = Post::all();
+        if ($dir) {
+            $posts = $all->sortByDesc(function ($post) use ($order) {
+                return $post->$order;
+            });
+        } else {
+            $posts = $all->sortBy(function ($post) use ($order) {
+                return $post->$order;
+            });
+        }
+
+        return view('components.posts.all', [
+            'posts' => $posts
+        ]);
+    }
+
+    public function getOnePost($id)
+    {
+        return view('components.posts.one', ['post' => Post::find($id)->firstOrFail()]);
+    }
+
 }
