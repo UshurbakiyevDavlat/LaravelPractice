@@ -36,11 +36,12 @@ Route::group([
     Route::get('all/Employees', [DBcontroller::class, 'getAllEmployees']);
     Route::get('buildOperationsUsers', [DBcontroller::class, 'buildOperationsUsers']);
     Route::get('relation', [DBcontroller::class, 'crossingRelate']);
-
     Route::get('eloqStart/{order?}/{dir?}', [DBcontroller::class, 'eloqStart'])
-        ->where(['order' => '[a-zA-Z]+','dir'=>'[0-9]+']);
-
+        ->where(['order' => '[a-zA-Z]+', 'dir' => '[0-9]+']);
     Route::get('eloqPostOne/{id}', [DBcontroller::class, 'getOnePost'])->where(['id' => '[0-9]+']);
+    Route::post('newPost',[DBcontroller::class,'newPost']);
+    Route::match(['post','get'],'editPost/{id}',[DBcontroller::class,'edit']);
+
 });
 
 

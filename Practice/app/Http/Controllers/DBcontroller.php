@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use http\Cookie;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
@@ -258,13 +260,44 @@ class DBcontroller extends Controller
         }
 
         return view('components.posts.all', [
-            'posts' => $posts
+            'posts' => $posts,
+            'flash' => session()->get('notif')
         ]);
     }
 
     public function getOnePost($id)
     {
         return view('components.posts.one', ['post' => Post::find($id)->firstOrFail()]);
+    }
+
+    public function newPost(Request $request)
+    {
+
+        $newPost = new Post;
+
+        $newPost->title = $request->title;
+        $newPost->desc = $request->desc;
+        $newPost->date = date('Y-m-d');
+        $newPost->save();
+
+    }
+
+
+    public function edit(Request $request, $id)
+    {
+        $post = Post::find($id);
+        if ($request->has('submit')) {
+            $post->title = $request->title;
+            $post->desc = $request->desc;
+            $post->date = $request->date;
+            $post->updated_at = date('Y-m-d H:i:s');
+            $post->save();
+
+            session()->flash('notif','Successfully edited topic with id: '. $id .' and title: '. $post->title);
+
+            return redirect('DB/eloqStart');
+        }
+        return view('components.posts.edit', ['post' => $post]);
     }
 
 }

@@ -1,3 +1,7 @@
+<div>
+    <? echo $flash;?>
+</div>
+
 <table>
     <tr>
         <th>id</th>
@@ -12,6 +16,8 @@
         <td><a href="/DB/eloqPostOne/{{$post->id}}"><? echo $post->title; ?></a></td>
         <td><? echo $post->desc; ?></td>
         <td><? echo $post->date; ?></td>
+        <td><a href="/DB/editPost/{{$post->id}}">redact</a></td>
+
     </tr>
     <? } ?>
 </table>
