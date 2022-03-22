@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\City;
 use App\Models\Post;
-use http\Cookie;
+use App\Models\Profile;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -262,8 +264,8 @@ class DBcontroller extends Controller
         return view('components.posts.all', [
             'posts' => $posts,
             'flash' => session()->get('notif'),
-            'flashDelete'=>session()->get('flashDelete'),
-            'flashRestore'=>session()->get('restoreTry')
+            'flashDelete' => session()->get('flashDelete'),
+            'flashRestore' => session()->get('restoreTry')
         ]);
     }
 
@@ -305,22 +307,44 @@ class DBcontroller extends Controller
     public function delete(Request $request, $id)
     {
         Post::destroy($id);
-        if (Post::onlyTrashed()->where('id',$id)->get()) {
+        if (Post::onlyTrashed()->where('id', $id)->get()) {
             session()->flash('flashDelete', 'deleted succesfully');
         }
         return self::eloqStart();
     }
 
-    public function getDeletedPost() {
-        $trashed =  Post::onlyTrashed()->get();
-        return view('components.posts.trash',['trashed'=>$trashed]);
+    public function getDeletedPost()
+    {
+        $trashed = Post::onlyTrashed()->get();
+        return view('components.posts.trash', ['trashed' => $trashed]);
     }
 
-    public function restorePost(Request $request, $id) {
+    public function restorePost(Request $request, $id)
+    {
         $post = Post::withTrashed()->find($id);
         $post->restore();
-        session()->flash('restoreTry','Successfuly restored post with id - '. $id);
+        session()->flash('restoreTry', 'Successfuly restored post with id - ' . $id);
         return redirect('/DB/eloqStart');
+    }
+
+    public function userProfile($id)
+    {
+        $profiles = Profile::find($id);
+        $user = User::find($id);
+
+        return dd($user);
+    }
+
+    public function getProfiles()
+    {
+        $users = User::with('profile')->get();
+        return view('components.user.profiles.all', ['users' => $users]);
+    }
+
+    public function getUsersWithCity()
+    {
+        $users = User::with('city')->get();
+        return view('components.user.profiles.all', ['users' => $users]);
     }
 
 }

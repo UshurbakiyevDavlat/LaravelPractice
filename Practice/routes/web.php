@@ -39,11 +39,15 @@ Route::group([
     Route::get('eloqStart/{order?}/{dir?}', [DBcontroller::class, 'eloqStart'])
         ->where(['order' => '[a-zA-Z]+', 'dir' => '[0-9]+']);
     Route::get('eloqPostOne/{id}', [DBcontroller::class, 'getOnePost'])->where(['id' => '[0-9]+']);
-    Route::post('newPost',[DBcontroller::class,'newPost']);
-    Route::match(['post','get'],'editPost/{id}',[DBcontroller::class,'edit']);
-    Route::match(['post','get'],'delPost/{id}',[DBcontroller::class,'delete']);
-    Route::get('trashedPosts',[DBcontroller::class,'getDeletedPost']);
-    Route::get('restorePosts/{id}',[DBcontroller::class,'restorePost']);
+    Route::post('newPost', [DBcontroller::class, 'newPost']);
+    Route::match(['post', 'get'], 'editPost/{id}', [DBcontroller::class, 'edit']);
+    Route::match(['post', 'get'], 'delPost/{id}', [DBcontroller::class, 'delete']);
+    Route::get('trashedPosts', [DBcontroller::class, 'getDeletedPost']);
+    Route::get('restorePosts/{id}', [DBcontroller::class, 'restorePost']);
+
+    Route::get('userProfiles/{id}', [DBcontroller::class, 'userProfile']);
+    Route::get('getProfiles',[DBcontroller::class,'getProfiles']);
+    Route::get('getUsersCity',[DBcontroller::class,'getUsersWithCity']);
 });
 
 
