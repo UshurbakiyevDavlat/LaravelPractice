@@ -41,7 +41,9 @@ Route::group([
     Route::get('eloqPostOne/{id}', [DBcontroller::class, 'getOnePost'])->where(['id' => '[0-9]+']);
     Route::post('newPost',[DBcontroller::class,'newPost']);
     Route::match(['post','get'],'editPost/{id}',[DBcontroller::class,'edit']);
-
+    Route::match(['post','get'],'delPost/{id}',[DBcontroller::class,'delete']);
+    Route::get('trashedPosts',[DBcontroller::class,'getDeletedPost']);
+    Route::get('restorePosts/{id}',[DBcontroller::class,'restorePost']);
 });
 
 

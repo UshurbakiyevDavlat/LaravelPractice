@@ -261,7 +261,9 @@ class DBcontroller extends Controller
 
         return view('components.posts.all', [
             'posts' => $posts,
-            'flash' => session()->get('notif')
+            'flash' => session()->get('notif'),
+            'flashDelete'=>session()->get('flashDelete'),
+            'flashRestore'=>session()->get('restoreTry')
         ]);
     }
 
@@ -293,11 +295,32 @@ class DBcontroller extends Controller
             $post->updated_at = date('Y-m-d H:i:s');
             $post->save();
 
-            session()->flash('notif','Successfully edited topic with id: '. $id .' and title: '. $post->title);
+            session()->flash('notif', 'Successfully edited topic with id: ' . $id . ' and title: ' . $post->title);
 
             return redirect('DB/eloqStart');
         }
         return view('components.posts.edit', ['post' => $post]);
+    }
+
+    public function delete(Request $request, $id)
+    {
+        Post::destroy($id);
+        if (Post::onlyTrashed()->where('id',$id)->get()) {
+            session()->flash('flashDelete', 'deleted succesfully');
+        }
+        return self::eloqStart();
+    }
+
+    public function getDeletedPost() {
+        $trashed =  Post::onlyTrashed()->get();
+        return view('components.posts.trash',['trashed'=>$trashed]);
+    }
+
+    public function restorePost(Request $request, $id) {
+        $post = Post::withTrashed()->find($id);
+        $post->restore();
+        session()->flash('restoreTry','Successfuly restored post with id - '. $id);
+        return redirect('/DB/eloqStart');
     }
 
 }
