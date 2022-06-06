@@ -1,1 +1,2 @@
 # LaravelPractice
+Practice laravel basics.
